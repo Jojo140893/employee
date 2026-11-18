@@ -1,0 +1,348 @@
+// ==============================================================================
+// DigitalX Solutions - Employee CRM & Google Voice Operations Platform
+// Prisma Relational Database Schema
+// ==============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  MANAGER
+  AGENT
+}
+
+enum EmploymentStatus {
+  ACTIVE
+  PROBATION
+  ON_LEAVE
+  INACTIVE
+}
+
+enum LivePresenceStatus {
+  AVAILABLE
+  ON_CALL
+  IN_WRAPUP
+  BREAK
+  OFFLINE
+}
+
+enum CallDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum CallStatus {
+  COMPLETED
+  MISSED
+  VOICEMAIL
+  NO_ANSWER
+  BUSY
+}
+
+enum CallOutcomeTag {
+  INTERESTED
+  FOLLOW_UP
+  CLOSED
+  NOT_INTERESTED
+  SUPPORT
+}
+
+enum SentimentScore {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+}
+
+enum ContactStatus {
+  LEAD
+  PROSPECT
+  CUSTOMER
+  CHURNED
+}
+
+enum GoogleVoiceMode {
+  WORKSPACE_SYNC
+  SIP_LINK_TRUNK
+}
+
+enum SmsDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum SmsStatus {
+  SENT
+  DELIVERED
+  RECEIVED
+  FAILED
+}
+
+// ------------------------------------------------------------------------------
+// 1. Authentication & System Users
+// ------------------------------------------------------------------------------
+model User {
+  id           String           @id @default(uuid())
+  email        String           @unique
+  name         String
+  role         Role             @default(AGENT)
+  avatarUrl    String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  employeeProfile EmployeeProfile?
+  auditLogs       AuditLog[]
+
+  @@map("users")
+}
+
+// ------------------------------------------------------------------------------
+// 2. Comprehensive Employee Directory
+// ------------------------------------------------------------------------------
+model EmployeeProfile {
+  id                     String             @id @default(uuid())
+  userId                 String?            @unique
+  user                   User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  employeeCode           String             @unique // e.g. DX-1001
+  fullName               String
+  avatarUrl              String?
+  jobTitle               String
+  department             String
+  employmentStatus       EmploymentStatus   @default(ACTIVE)
+  joiningDate            DateTime
+  workEmail              String             @unique
+  personalEmail          String
+  personalPhone          String
+  residentialAddress     String
+
+  // Personal & Emergency Details
+  dateOfBirth            DateTime?
+  bloodGroup             String?            // e.g. "O+", "A+", "B-"
+  emergencyContactName   String
+  emergencyRelationship  String
+  emergencyPhone         String
+
+  // Telephony Assignment & Shift Presence
+  sipExtension           String             @unique // e.g. "101", "102"
+  shiftStart             String             @default("09:00")
+  shiftEnd               String             @default("18:00")
+  timezone               String             @default("America/New_York")
+  liveStatus             LivePresenceStatus @default(OFFLINE)
+  lastStatusChange       DateTime           @default(now())
+
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+
+  // 1:1 Encrypted Restricted Admin Vault
+  sensitiveVault         EmployeeSensitiveVault?
+
+  // Relations
+  googleVoiceLine        GoogleVoiceLine?
+  callLogs               CallLog[]
+  assignedContacts       Contact[]
+  smsMessages            SmsMessage[]
+
+  @@index([department])
+  @@index([employmentStatus])
+  @@index([liveStatus])
+  @@map("employee_profiles")
+}
+
+// ------------------------------------------------------------------------------
+// 3. Restricted Admin-Only Vault (AES-256-GCM Encrypted at Rest)
+// ------------------------------------------------------------------------------
+model EmployeeSensitiveVault {
+  id                         String          @id @default(uuid())
+  employeeProfileId          String          @unique
+  employeeProfile            EmployeeProfile @relation(fields: [employeeProfileId], references: [id], onDelete: Cascade)
+
+  // National ID / CNIC (Encrypted + Masked preview)
+  encryptedCnic              String          // Encrypted ciphertext
+  cnicLastFour               String          // e.g. "***-****-4921"
+
+  // Identity & Agreement Document Vault
+  idFrontDocumentUrl         String?
+  idBackDocumentUrl          String?
+  employmentAgreementPdfUrl  String?
+
+  // Payroll & Bank Account Details (Encrypted + Masked preview)
+  encryptedBankDetails       String          // Encrypted JSON containing bankName, accountNumber, iban, routingNumber
+  bankAccountLastFour        String          // e.g. "Account ending in 8842"
+
+  updatedAt                  DateTime        @updatedAt
+
+  @@map("employee_sensitive_vaults")
+}
+
+// ------------------------------------------------------------------------------
+// 4. Google Voice Telephony Lines (Dual-Mode: Workspace Sync & SIP Link)
+// ------------------------------------------------------------------------------
+model GoogleVoiceLine {
+  id                          String          @id @default(uuid())
+  phoneNumber                 String          @unique // E.164: +12025550198
+  carrier                     String          @default("Google Voice")
+  mode                        GoogleVoiceMode @default(SIP_LINK_TRUNK)
+  sipTrunkExtension           String?
+  isActive                    Boolean         @default(true)
+  callRecordingConsentEnabled Boolean         @default(true) // Automated disclaimer
+
+  assignedEmployeeId          String?         @unique
+  assignedEmployee            EmployeeProfile? @relation(fields: [assignedEmployeeId], references: [id], onDelete: SetNull)
+
+  createdAt                   DateTime        @default(now())
+  updatedAt                   DateTime        @updatedAt
+
+  callLogs                    CallLog[]
+  smsMessages                 SmsMessage[]
+
+  @@map("google_voice_lines")
+}
+
+// ------------------------------------------------------------------------------
+// 5. CRM Leads & Customer Contacts
+// ------------------------------------------------------------------------------
+model Contact {
+  id                 String          @id @default(uuid())
+  name               String
+  phoneNumber        String          @unique // E.164 format
+  email              String?
+  company            String?
+  status             ContactStatus   @default(LEAD)
+  notes              String?
+  tags               String          @default("[]") // JSON string of tags
+
+  assignedEmployeeId String?
+  assignedEmployee   EmployeeProfile? @relation(fields: [assignedEmployeeId], references: [id], onDelete: SetNull)
+
+  lastContactedAt    DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  callLogs           CallLog[]
+  smsMessages        SmsMessage[]
+
+  @@index([phoneNumber])
+  @@index([status])
+  @@map("contacts")
+}
+
+// ------------------------------------------------------------------------------
+// 6. Call Logs & Telephony Sessions
+// ------------------------------------------------------------------------------
+model CallLog {
+  id                 String          @id @default(uuid())
+  callSid            String          @unique // Unique Google Voice or SIP Call SID
+  direction          CallDirection
+  callerNumber       String
+  calleeNumber       String
+  status             CallStatus      @default(COMPLETED)
+  startTime          DateTime        @default(now())
+  endTime            DateTime?
+  durationSeconds    Int             @default(0)
+  outcomeTag         CallOutcomeTag?
+
+  employeeId         String?
+  employee           EmployeeProfile? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+
+  googleVoiceLineId  String?
+  googleVoiceLine    GoogleVoiceLine? @relation(fields: [googleVoiceLineId], references: [id], onDelete: SetNull)
+
+  contactId          String?
+  contact            Contact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  notes              String?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  recording          CallRecording?
+
+  @@index([employeeId])
+  @@index([startTime])
+  @@index([status])
+  @@map("call_logs")
+}
+
+// ------------------------------------------------------------------------------
+// 7. Call Recordings & Post-Call AI Pipeline
+// ------------------------------------------------------------------------------
+model CallRecording {
+  id                 String          @id @default(uuid())
+  callLogId          String          @unique
+  callLog            CallLog         @relation(fields: [callLogId], references: [id], onDelete: Cascade)
+
+  storageKey         String          // S3 / R2 Object Key
+  audioUrl           String          // Signed or permanent streaming playback URL
+  format             String          @default("mp3")
+  channelCount       Int             @default(2) // Dual-channel
+  fileSizeBytes      Int             @default(0)
+  durationSeconds    Int             @default(0)
+
+  // AI Transcription & Insights
+  transcriptText     String?         @db.Text
+  diarizedTranscript String?         @db.Text // JSON string: [{speaker: 'Agent', text: '...'}, ...]
+  summaryBullet1     String?
+  summaryBullet2     String?
+  summaryBullet3     String?
+  actionItems        String          @default("[]") // JSON string of actionable tasks
+  sentimentScore     SentimentScore? @default(NEUTRAL)
+  confidenceScore    Float?          @default(0.95)
+
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  @@map("call_recordings")
+}
+
+// ------------------------------------------------------------------------------
+// 8. Unified Two-Way SMS & Voicemail Messaging
+// ------------------------------------------------------------------------------
+model SmsMessage {
+  id                 String          @id @default(uuid())
+  googleVoiceLineId  String
+  googleVoiceLine    GoogleVoiceLine @relation(fields: [googleVoiceLineId], references: [id], onDelete: Cascade)
+
+  employeeId         String?
+  employee           EmployeeProfile? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+
+  contactId          String?
+  contact            Contact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  direction          SmsDirection
+  fromNumber         String
+  toNumber           String
+  body               String          @db.Text
+  status             SmsStatus       @default(DELIVERED)
+  sentAt             DateTime        @default(now())
+
+  @@index([contactId])
+  @@index([sentAt])
+  @@map("sms_messages")
+}
+
+// ------------------------------------------------------------------------------
+// 9. Enterprise Security Audit Trail
+// ------------------------------------------------------------------------------
+model AuditLog {
+  id           String      @id @default(uuid())
+  userId       String?
+  user         User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userEmail    String
+  userRole     Role
+  action       String      // e.g. "VAULT_REVEAL", "RECORDING_PLAYED", "CSV_IMPORT"
+  targetType   String      // "EmployeeProfile", "CallRecording", "GoogleVoiceLine"
+  targetId     String
+  ipAddress    String      @default("127.0.0.1")
+  userAgent    String?
+  metadata     String      @default("{}") // JSON string with extra contextual data
+  createdAt    DateTime    @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
