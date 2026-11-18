@@ -6,26 +6,38 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
+  TrendingUp,
+  CalendarCheck,
+  Award,
+  Truck,
   PhoneCall,
-  Contact,
-  MessageSquare,
   ShieldCheck,
   Settings,
-  Sparkles,
   Server
 } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
 
-  const navItems = [
-    { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  // Core 5 Pillars requested:
+  // 1. Employee Directory
+  // 2. Tracking Progress
+  // 3. Appointment Setter
+  // 4. Closure
+  // 5. Project Delivery
+  const corePortalItems = [
+    { label: "Overview Portal", href: "/", icon: LayoutDashboard },
     { label: "Employee Directory", href: "/employees", icon: Users, badge: "16" },
-    { label: "Call Center & Recordings", href: "/telephony", icon: PhoneCall },
-    { label: "CRM Leads & Contacts", href: "/crm", icon: Contact },
-    { label: "SMS & Voicemail Inbox", href: "/inbox", icon: MessageSquare, badge: "3" },
+    { label: "Tracking Progress", href: "/progress", icon: TrendingUp, badge: "Live" },
+    { label: "Appointment Setter", href: "/setter", icon: CalendarCheck, badge: "5 Booked" },
+    { label: "Closures", href: "/closure", icon: Award, badge: "$251k" },
+    { label: "Project Delivery", href: "/delivery", icon: Truck, badge: "4 Active" },
+  ];
+
+  const auxiliaryItems = [
+    { label: "Telephony & Softphone", href: "/telephony", icon: PhoneCall },
     { label: "Security Audit Logs", href: "/audit", icon: ShieldCheck },
-    { label: "Telephony Settings", href: "/settings", icon: Settings },
+    { label: "Settings", href: "/settings", icon: Settings },
   ];
 
   return (
@@ -33,26 +45,26 @@ export default function Sidebar() {
       <div>
         {/* Brand Header */}
         <div className="h-16 flex items-center px-6 border-b border-slate-800 space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center font-black text-lg shadow-md shadow-blue-500/20 text-white">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-black text-lg shadow-md shadow-blue-500/20 text-white">
             DX
           </div>
           <div>
             <div className="text-sm font-bold tracking-tight text-white flex items-center space-x-1.5">
               <span>DigitalX</span>
-              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                Voice CRM
+              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                Operations
               </span>
             </div>
-            <div className="text-[11px] text-slate-400">digitalx-solutions.com</div>
+            <div className="text-[11px] text-slate-400">Employee & Revenue Portal</div>
           </div>
         </div>
 
-        {/* Navigation Items */}
+        {/* Core Pillars Navigation */}
         <nav className="p-3 space-y-1">
-          <div className="px-3 py-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-            Operations & Team
+          <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            Employee & Revenue Pipeline
           </div>
-          {navItems.map((item) => {
+          {corePortalItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
             return (
@@ -62,11 +74,11 @@ export default function Sidebar() {
                 className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   isActive
                     ? "bg-blue-600 text-white shadow-sm shadow-blue-600/30"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800/70"
                 }`}
               >
                 <div className="flex items-center space-x-3">
-                  <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-400"}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-blue-400"}`} />
                   <span>{item.label}</span>
                 </div>
                 {item.badge && (
@@ -81,35 +93,45 @@ export default function Sidebar() {
               </Link>
             );
           })}
+
+          <div className="pt-4 px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            Operations & Compliance
+          </div>
+          {auxiliaryItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  isActive
+                    ? "bg-blue-600 text-white shadow-sm shadow-blue-600/30"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-400"}`} />
+                  <span>{item.label}</span>
+                </div>
+              </Link>
+            );
+          })}
         </nav>
       </div>
 
-      {/* Telephony Engine Live Status Widget */}
+      {/* System Status */}
       <div className="p-4 border-t border-slate-800 bg-slate-950/40">
-        <div className="rounded-xl p-3 border border-slate-800 bg-slate-900/60 space-y-2">
+        <div className="rounded-xl p-3 border border-slate-800 bg-slate-900/60 space-y-1.5 text-[11px]">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-400 flex items-center space-x-1.5">
-              <Server className="w-3.5 h-3.5 text-blue-400" />
-              <span>Telephony Engine</span>
+            <span className="font-semibold text-slate-300 flex items-center space-x-1.5">
+              <Server className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Portal Engine</span>
             </span>
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
+            <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
           </div>
-          <div className="space-y-1 text-[11px]">
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-400">Google Voice:</span>
-              <span className="font-mono text-emerald-400 font-medium">Dual-Mode Sync</span>
-            </div>
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-400">SIP Trunk:</span>
-              <span className="font-mono text-blue-400 font-medium">Active (WSS)</span>
-            </div>
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-400">Recording:</span>
-              <span className="font-mono text-purple-400 font-medium">100% Dual-Ch</span>
-            </div>
+          <div className="text-slate-400 text-[10px]">
+            Setters: <strong className="text-emerald-400">Active</strong> • Closures: <strong className="text-blue-400">Synced</strong>
           </div>
         </div>
       </div>

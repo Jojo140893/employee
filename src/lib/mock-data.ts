@@ -115,6 +115,94 @@ export interface AuditLogRecord {
 }
 
 // ------------------------------------------------------------------------------
+// Appointment Setter Records
+// ------------------------------------------------------------------------------
+export interface AppointmentRecord {
+  id: string;
+  prospectName: string;
+  company: string;
+  prospectPhone: string;
+  prospectEmail: string;
+  scheduledTime: string;
+  status: "BOOKED" | "CONFIRMED" | "COMPLETED" | "NO_SHOW" | "CANCELLED";
+  setterId: string;
+  setterName: string;
+  closerId: string;
+  closerName: string;
+  source: string;
+  notes: string;
+  createdAt: string;
+}
+
+// ------------------------------------------------------------------------------
+// Closures & Deals Pipeline Records
+// ------------------------------------------------------------------------------
+export interface ClosureDealRecord {
+  id: string;
+  dealName: string;
+  clientName: string;
+  company: string;
+  dealValue: number;
+  cashCollected: number;
+  stage: "QUALIFIED" | "PROPOSAL_SENT" | "NEGOTIATION" | "CONTRACT_SIGNED" | "CLOSED_WON" | "CLOSED_LOST";
+  closerId: string;
+  closerName: string;
+  setterId: string;
+  setterName: string;
+  closeDate: string;
+  contractUrl?: string;
+  notes: string;
+}
+
+// ------------------------------------------------------------------------------
+// Project Delivery & Milestones Records
+// ------------------------------------------------------------------------------
+export interface DeliveryMilestone {
+  id: string;
+  title: string;
+  completed: boolean;
+  dueDate: string;
+}
+
+export interface ProjectDeliveryRecord {
+  id: string;
+  projectName: string;
+  clientName: string;
+  company: string;
+  status: "ONBOARDING" | "IN_PROGRESS" | "QA_REVIEW" | "DELIVERED" | "BLOCKED";
+  health: "ON_TRACK" | "AT_RISK" | "DELAYED";
+  progressPercent: number; // 0 - 100
+  startDate: string;
+  targetDeliveryDate: string;
+  deliveryLeadId: string;
+  deliveryLeadName: string;
+  milestones: DeliveryMilestone[];
+  csatScore?: number;
+  notes: string;
+}
+
+// ------------------------------------------------------------------------------
+// Employee Progress Tracking Records
+// ------------------------------------------------------------------------------
+export interface EmployeeProgressRecord {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  employeeRole: string;
+  department: string;
+  avatarUrl: string;
+  weeklyTarget: number;
+  weeklyAchieved: number;
+  monthlyTarget: number;
+  monthlyAchieved: number;
+  metricLabel: string;
+  unit: string;
+  status: "EXCEEDING" | "ON_TRACK" | "NEEDS_ATTENTION";
+  completionRate: number;
+  recentActivity: string;
+}
+
+// ------------------------------------------------------------------------------
 // Initial Seed Data: DigitalX Solutions Roster
 // ------------------------------------------------------------------------------
 const initialEmployees: EmployeeRecord[] = [
@@ -590,6 +678,372 @@ const initialAuditLogs: AuditLogRecord[] = [
   },
 ];
 
+// ------------------------------------------------------------------------------
+// Initial Appointments Data (Appointment Setters)
+// ------------------------------------------------------------------------------
+const initialAppointments: AppointmentRecord[] = [
+  {
+    id: "apt-01",
+    prospectName: "Marcus Vance",
+    company: "Apex Capital Partners",
+    prospectPhone: "+1 (415) 890-1234",
+    prospectEmail: "marcus.vance@apexcapital.io",
+    scheduledTime: new Date(Date.now() + 2 * 24 * 3600000).toISOString(),
+    status: "CONFIRMED",
+    setterId: "emp-05",
+    setterName: "Zainab Tariq (Setter)",
+    closerId: "emp-04",
+    closerName: "Aneeqa Nadeem (Closer)",
+    source: "Outbound Cold Call",
+    notes: "Lead has 45 seats requiring immediate Google Voice SIP Link. Budget approved.",
+    createdAt: new Date(Date.now() - 24 * 3600000).toISOString(),
+  },
+  {
+    id: "apt-02",
+    prospectName: "Elena Rostova",
+    company: "NovaTech Global Logistics",
+    prospectPhone: "+1 (312) 445-9876",
+    prospectEmail: "elena@novatech-logistics.com",
+    scheduledTime: new Date(Date.now() + 3 * 24 * 3600000).toISOString(),
+    status: "BOOKED",
+    setterId: "emp-06",
+    setterName: "Marcus Kane (Setter)",
+    closerId: "emp-04",
+    closerName: "Aneeqa Nadeem (Closer)",
+    source: "Website Inbound",
+    notes: "Needs automated n8n AI transcription and dual-channel call recording.",
+    createdAt: new Date(Date.now() - 12 * 3600000).toISOString(),
+  },
+  {
+    id: "apt-03",
+    prospectName: "David Sterling",
+    company: "Sterling Private Wealth",
+    prospectPhone: "+1 (646) 332-1190",
+    prospectEmail: "david@sterlingwealth.com",
+    scheduledTime: new Date(Date.now() + 4 * 24 * 3600000).toISOString(),
+    status: "CONFIRMED",
+    setterId: "emp-05",
+    setterName: "Zainab Tariq (Setter)",
+    closerId: "emp-07",
+    closerName: "Liam Vance (Closer)",
+    source: "LinkedIn Outreach",
+    notes: "Requires SOC-2 compliant AES-256 encrypted vaults for employee document management.",
+    createdAt: new Date(Date.now() - 36 * 3600000).toISOString(),
+  },
+  {
+    id: "apt-04",
+    prospectName: "Sarah Jenkins",
+    company: "CloudScale Software",
+    prospectPhone: "+1 (512) 789-4321",
+    prospectEmail: "sjenkins@cloudscale.io",
+    scheduledTime: new Date(Date.now() - 2 * 24 * 3600000).toISOString(),
+    status: "COMPLETED",
+    setterId: "emp-06",
+    setterName: "Marcus Kane (Setter)",
+    closerId: "emp-04",
+    closerName: "Aneeqa Nadeem (Closer)",
+    source: "Partner Referral",
+    notes: "Pitched Enterprise Tier. Closer initiated contract generation.",
+    createdAt: new Date(Date.now() - 5 * 24 * 3600000).toISOString(),
+  },
+  {
+    id: "apt-05",
+    prospectName: "Robert Chen",
+    company: "Vanguard Health Tech",
+    prospectPhone: "+1 (415) 332-8877",
+    prospectEmail: "rchen@vanguardhealth.com",
+    scheduledTime: new Date(Date.now() - 1 * 24 * 3600000).toISOString(),
+    status: "NO_SHOW",
+    setterId: "emp-05",
+    setterName: "Zainab Tariq (Setter)",
+    closerId: "emp-07",
+    closerName: "Liam Vance (Closer)",
+    source: "Outbound Cold Call",
+    notes: "Rescheduled SMS template sent. Waiting for calendar update.",
+    createdAt: new Date(Date.now() - 48 * 3600000).toISOString(),
+  },
+];
+
+// ------------------------------------------------------------------------------
+// Initial Closure Deals Data (Sales Closers)
+// ------------------------------------------------------------------------------
+const initialClosureDeals: ClosureDealRecord[] = [
+  {
+    id: "deal-01",
+    dealName: "Apex Capital Enterprise Telephony Rollout",
+    clientName: "Marcus Vance",
+    company: "Apex Capital Partners",
+    dealValue: 48000,
+    cashCollected: 24000,
+    stage: "CONTRACT_SIGNED",
+    closerId: "emp-04",
+    closerName: "Aneeqa Nadeem (Closer)",
+    setterId: "emp-05",
+    setterName: "Zainab Tariq (Setter)",
+    closeDate: new Date(Date.now() + 1 * 24 * 3600000).toISOString(),
+    contractUrl: "/contracts/apex_capital_signed.pdf",
+    notes: "Signed 12-month contract for 45 Google Voice SIP lines + dual-channel recording.",
+  },
+  {
+    id: "deal-02",
+    dealName: "CloudScale Full Telephony Core & Vault",
+    clientName: "Sarah Jenkins",
+    company: "CloudScale Software",
+    dealValue: 62000,
+    cashCollected: 62000,
+    stage: "CLOSED_WON",
+    closerId: "emp-04",
+    closerName: "Aneeqa Nadeem (Closer)",
+    setterId: "emp-06",
+    setterName: "Marcus Kane (Setter)",
+    closeDate: new Date(Date.now() - 7 * 24 * 3600000).toISOString(),
+    contractUrl: "/contracts/cloudscale_won.pdf",
+    notes: "Paid in full. Handed over to Ahsan Masood for project delivery.",
+  },
+  {
+    id: "deal-03",
+    dealName: "NovaTech Automated n8n AI Pipelines",
+    clientName: "Elena Rostova",
+    company: "NovaTech Global Logistics",
+    dealValue: 34500,
+    cashCollected: 17250,
+    stage: "NEGOTIATION",
+    closerId: "emp-07",
+    closerName: "Liam Vance (Closer)",
+    setterId: "emp-06",
+    setterName: "Marcus Kane (Setter)",
+    closeDate: new Date(Date.now() + 5 * 24 * 3600000).toISOString(),
+    notes: "Custom SLA requested. Reviewing security terms.",
+  },
+  {
+    id: "deal-04",
+    dealName: "Sterling Private Wealth Dedicated SIP Trunk",
+    clientName: "David Sterling",
+    company: "Sterling Private Wealth",
+    dealValue: 22000,
+    cashCollected: 0,
+    stage: "PROPOSAL_SENT",
+    closerId: "emp-07",
+    closerName: "Liam Vance (Closer)",
+    setterId: "emp-05",
+    setterName: "Zainab Tariq (Setter)",
+    closeDate: new Date(Date.now() + 10 * 24 * 3600000).toISOString(),
+    notes: "Proposal delivered. Follow-up demo call booked.",
+  },
+  {
+    id: "deal-05",
+    dealName: "Quantum Logistics Global Mesh Telephony",
+    clientName: "Tariq B.",
+    company: "Quantum Logistics",
+    dealValue: 85000,
+    cashCollected: 85000,
+    stage: "CLOSED_WON",
+    closerId: "emp-01",
+    closerName: "Jazib Shahid (Founder)",
+    setterId: "emp-05",
+    setterName: "Zainab Tariq (Setter)",
+    closeDate: new Date(Date.now() - 14 * 24 * 3600000).toISOString(),
+    contractUrl: "/contracts/quantum_won.pdf",
+    notes: "Enterprise flagship closure. Project fully delivered.",
+  },
+];
+
+// ------------------------------------------------------------------------------
+// Initial Project Deliveries Data (Project Delivery)
+// ------------------------------------------------------------------------------
+const initialProjectDeliveries: ProjectDeliveryRecord[] = [
+  {
+    id: "proj-01",
+    projectName: "CloudScale Software Telephony & AI Rollout",
+    clientName: "Sarah Jenkins",
+    company: "CloudScale Software",
+    status: "IN_PROGRESS",
+    health: "ON_TRACK",
+    progressPercent: 75,
+    startDate: new Date(Date.now() - 14 * 24 * 3600000).toISOString(),
+    targetDeliveryDate: new Date(Date.now() + 7 * 24 * 3600000).toISOString(),
+    deliveryLeadId: "emp-03",
+    deliveryLeadName: "Ahsan Masood (Automation Engineer)",
+    milestones: [
+      { id: "m1", title: "Kickoff & Architecture Review", completed: true, dueDate: "2026-11-05" },
+      { id: "m2", title: "Google Voice SIP Link Trunk Configuration", completed: true, dueDate: "2026-11-10" },
+      { id: "m3", title: "Dual-Channel Audio S3 Bucket Setup", completed: true, dueDate: "2026-11-14" },
+      { id: "m4", title: "n8n AI Transcription Webhook Testing", completed: true, dueDate: "2026-11-18" },
+      { id: "m5", title: "Client Handover & Agent Training", completed: false, dueDate: "2026-11-25" },
+    ],
+    notes: "System passed latency tests. Final agent training session scheduled for Tuesday.",
+  },
+  {
+    id: "proj-02",
+    projectName: "Apex Capital Softphone & Encrypted Vault",
+    clientName: "Marcus Vance",
+    company: "Apex Capital Partners",
+    status: "ONBOARDING",
+    health: "ON_TRACK",
+    progressPercent: 25,
+    startDate: new Date(Date.now() - 3 * 24 * 3600000).toISOString(),
+    targetDeliveryDate: new Date(Date.now() + 18 * 24 * 3600000).toISOString(),
+    deliveryLeadId: "emp-08",
+    deliveryLeadName: "Hamza Ali (Delivery Specialist)",
+    milestones: [
+      { id: "m1", title: "Discovery & Employee Line Allocation", completed: true, dueDate: "2026-11-16" },
+      { id: "m2", title: "WebRTC Gateway Provisioning", completed: false, dueDate: "2026-11-22" },
+      { id: "m3", title: "AES-256 Vault Cryptographic Audit", completed: false, dueDate: "2026-11-28" },
+      { id: "m4", title: "Production Deployment", completed: false, dueDate: "2026-12-05" },
+    ],
+    notes: "Contract signed. Onboarding kickoff call held with Marcus.",
+  },
+  {
+    id: "proj-03",
+    projectName: "NovaTech Logistics Automated Pipelines",
+    clientName: "Elena Rostova",
+    company: "NovaTech Global Logistics",
+    status: "QA_REVIEW",
+    health: "AT_RISK",
+    progressPercent: 88,
+    startDate: new Date(Date.now() - 20 * 24 * 3600000).toISOString(),
+    targetDeliveryDate: new Date(Date.now() + 2 * 24 * 3600000).toISOString(),
+    deliveryLeadId: "emp-03",
+    deliveryLeadName: "Ahsan Masood (Automation Engineer)",
+    milestones: [
+      { id: "m1", title: "Workflow Mapping & BigQuery Schema", completed: true, dueDate: "2026-11-01" },
+      { id: "m2", title: "Webhook Ingestion Logic", completed: true, dueDate: "2026-11-08" },
+      { id: "m3", title: "AI Sentiment Pipeline Integration", completed: true, dueDate: "2026-11-15" },
+      { id: "m4", title: "User Acceptance Testing (UAT)", completed: false, dueDate: "2026-11-20" },
+    ],
+    notes: "Awaiting client signoff on UAT test cases. Target delivery at risk.",
+  },
+  {
+    id: "proj-04",
+    projectName: "Quantum Logistics Global Mesh Telephony",
+    clientName: "Tariq B.",
+    company: "Quantum Logistics",
+    status: "DELIVERED",
+    health: "ON_TRACK",
+    progressPercent: 100,
+    startDate: new Date(Date.now() - 35 * 24 * 3600000).toISOString(),
+    targetDeliveryDate: new Date(Date.now() - 5 * 24 * 3600000).toISOString(),
+    deliveryLeadId: "emp-02",
+    deliveryLeadName: "Sofia (Operations Manager)",
+    csatScore: 4.9,
+    milestones: [
+      { id: "m1", title: "Global Trunk Architecture", completed: true, dueDate: "2026-10-20" },
+      { id: "m2", title: "Multi-Region Carrier Redundancy", completed: true, dueDate: "2026-10-28" },
+      { id: "m3", title: "Security Compliance & Testing", completed: true, dueDate: "2026-11-05" },
+      { id: "m4", title: "Full Go-Live & Staff Training", completed: true, dueDate: "2026-11-13" },
+    ],
+    notes: "Delivered 2 days ahead of schedule. Customer gave 4.9 / 5 CSAT rating.",
+  },
+];
+
+// ------------------------------------------------------------------------------
+// Initial Employee Progress Records (Tracking Progress)
+// ------------------------------------------------------------------------------
+const initialProgressRecords: EmployeeProgressRecord[] = [
+  {
+    id: "prog-01",
+    employeeId: "emp-05",
+    employeeName: "Zainab Tariq",
+    employeeRole: "Senior Appointment Setter",
+    department: "Appointment Setting",
+    avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80",
+    weeklyTarget: 5,
+    weeklyAchieved: 6,
+    monthlyTarget: 20,
+    monthlyAchieved: 22,
+    metricLabel: "Appointments Booked",
+    unit: "calls",
+    status: "EXCEEDING",
+    completionRate: 110,
+    recentActivity: "Booked high-intent meeting with Apex Capital Partners (45 seats)",
+  },
+  {
+    id: "prog-02",
+    employeeId: "emp-06",
+    employeeName: "Marcus Kane",
+    employeeRole: "Outbound Appointment Setter",
+    department: "Appointment Setting",
+    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+    weeklyTarget: 5,
+    weeklyAchieved: 4,
+    monthlyTarget: 20,
+    monthlyAchieved: 18,
+    metricLabel: "Appointments Booked",
+    unit: "calls",
+    status: "ON_TRACK",
+    completionRate: 90,
+    recentActivity: "Booked demo for NovaTech Global Logistics via website inbound",
+  },
+  {
+    id: "prog-03",
+    employeeId: "emp-04",
+    employeeName: "Aneeqa Nadeem",
+    employeeRole: "Senior Sales Closer",
+    department: "Sales & Closures",
+    avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+    weeklyTarget: 25000,
+    weeklyAchieved: 48000,
+    monthlyTarget: 100000,
+    monthlyAchieved: 110000,
+    metricLabel: "Closed Contract Value",
+    unit: "$",
+    status: "EXCEEDING",
+    completionRate: 110,
+    recentActivity: "Closed Apex Capital Partners ($48,000) & CloudScale ($62,000)",
+  },
+  {
+    id: "prog-04",
+    employeeId: "emp-07",
+    employeeName: "Liam Vance",
+    employeeRole: "Account Executive / Closer",
+    department: "Sales & Closures",
+    avatarUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80",
+    weeklyTarget: 20000,
+    weeklyAchieved: 15000,
+    monthlyTarget: 80000,
+    monthlyAchieved: 56500,
+    metricLabel: "Closed Contract Value",
+    unit: "$",
+    status: "ON_TRACK",
+    completionRate: 70,
+    recentActivity: "Sent proposal to Sterling Private Wealth ($22,000)",
+  },
+  {
+    id: "prog-05",
+    employeeId: "emp-03",
+    employeeName: "Ahsan Masood",
+    employeeRole: "Lead Technical Delivery Engineer",
+    department: "Project Delivery",
+    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+    weeklyTarget: 1,
+    weeklyAchieved: 1,
+    monthlyTarget: 4,
+    monthlyAchieved: 3,
+    metricLabel: "Milestones Delivered",
+    unit: "projects",
+    status: "ON_TRACK",
+    completionRate: 75,
+    recentActivity: "Completed n8n AI webhook milestone for CloudScale rollout",
+  },
+  {
+    id: "prog-06",
+    employeeId: "emp-02",
+    employeeName: "Sofia",
+    employeeRole: "Operations & Delivery Manager",
+    department: "Project Delivery",
+    avatarUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80",
+    weeklyTarget: 2,
+    weeklyAchieved: 2,
+    monthlyTarget: 5,
+    monthlyAchieved: 5,
+    metricLabel: "Project Deliveries Signed Off",
+    unit: "projects",
+    status: "EXCEEDING",
+    completionRate: 100,
+    recentActivity: "Signed off Quantum Logistics delivery with 4.9 CSAT",
+  },
+];
+
 // In-Memory Data Store (Allows immediate zero-config operations)
 export class DatabaseStore {
   private static employees: EmployeeRecord[] = [...initialEmployees];
@@ -597,6 +1051,10 @@ export class DatabaseStore {
   private static callLogs: CallLogRecord[] = [...initialCallLogs];
   private static smsMessages: SmsMessageRecord[] = [...initialSms];
   private static auditLogs: AuditLogRecord[] = [...initialAuditLogs];
+  private static appointments: AppointmentRecord[] = [...initialAppointments];
+  private static closureDeals: ClosureDealRecord[] = [...initialClosureDeals];
+  private static projectDeliveries: ProjectDeliveryRecord[] = [...initialProjectDeliveries];
+  private static progressRecords: EmployeeProgressRecord[] = [...initialProgressRecords];
 
   static getEmployees() {
     return this.employees;
@@ -663,5 +1121,67 @@ export class DatabaseStore {
     };
     this.auditLogs.unshift(entry);
     return entry;
+  }
+
+  // --- Portal Methods: Appointment Setters ---
+  static getAppointments() {
+    return this.appointments;
+  }
+
+  static addAppointment(apt: AppointmentRecord) {
+    this.appointments.unshift(apt);
+    return apt;
+  }
+
+  static updateAppointmentStatus(id: string, status: AppointmentRecord["status"]) {
+    const apt = this.appointments.find((a) => a.id === id);
+    if (apt) apt.status = status;
+    return apt;
+  }
+
+  // --- Portal Methods: Closures ---
+  static getClosureDeals() {
+    return this.closureDeals;
+  }
+
+  static addClosureDeal(deal: ClosureDealRecord) {
+    this.closureDeals.unshift(deal);
+    return deal;
+  }
+
+  static updateClosureDealStage(id: string, stage: ClosureDealRecord["stage"]) {
+    const deal = this.closureDeals.find((d) => d.id === id);
+    if (deal) deal.stage = stage;
+    return deal;
+  }
+
+  // --- Portal Methods: Project Delivery ---
+  static getProjectDeliveries() {
+    return this.projectDeliveries;
+  }
+
+  static addProjectDelivery(proj: ProjectDeliveryRecord) {
+    this.projectDeliveries.unshift(proj);
+    return proj;
+  }
+
+  static toggleMilestone(projectId: string, milestoneId: string) {
+    const proj = this.projectDeliveries.find((p) => p.id === projectId);
+    if (proj) {
+      const ms = proj.milestones.find((m) => m.id === milestoneId);
+      if (ms) {
+        ms.completed = !ms.completed;
+        const total = proj.milestones.length;
+        const done = proj.milestones.filter((m) => m.completed).length;
+        proj.progressPercent = Math.round((done / total) * 100);
+        if (proj.progressPercent === 100) proj.status = "DELIVERED";
+      }
+    }
+    return proj;
+  }
+
+  // --- Portal Methods: Progress Tracking ---
+  static getProgressRecords() {
+    return this.progressRecords;
   }
 }

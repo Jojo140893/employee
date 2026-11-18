@@ -148,6 +148,14 @@ model EmployeeProfile {
   assignedContacts       Contact[]
   smsMessages            SmsMessage[]
 
+  // Operations Portal Relations
+  setAppointments        Appointment[]      @relation("SetterAppointments")
+  closedAppointments     Appointment[]      @relation("CloserAppointments")
+  closedDeals            ClosureDeal[]      @relation("CloserDeals")
+  setterDeals            ClosureDeal[]      @relation("SetterDeals")
+  leadProjects           ProjectDelivery[]  @relation("LeadProjects")
+  progressRecords        EmployeeProgress[]
+
   @@index([department])
   @@index([employmentStatus])
   @@index([liveStatus])
@@ -345,4 +353,146 @@ model AuditLog {
   @@index([action])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+
+// ------------------------------------------------------------------------------
+// 10. Operations Portal: Appointment Setter, Closures & Project Delivery
+// ------------------------------------------------------------------------------
+
+enum AppointmentStatus {
+  BOOKED
+  CONFIRMED
+  COMPLETED
+  NO_SHOW
+  CANCELLED
+}
+
+enum DealStage {
+  QUALIFIED
+  PROPOSAL_SENT
+  NEGOTIATION
+  CONTRACT_SIGNED
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+enum ProjectDeliveryStatus {
+  ONBOARDING
+  IN_PROGRESS
+  QA_REVIEW
+  DELIVERED
+  BLOCKED
+}
+
+enum DeliveryHealth {
+  ON_TRACK
+  AT_RISK
+  DELAYED
+}
+
+enum ProgressStatus {
+  EXCEEDING
+  ON_TRACK
+  NEEDS_ATTENTION
+}
+
+model Appointment {
+  id            String            @id @default(uuid())
+  prospectName  String
+  prospectEmail String?
+  prospectPhone String
+  company       String?
+  scheduledTime DateTime
+  status        AppointmentStatus @default(BOOKED)
+  notes         String?
+  source        String            @default("Outbound Cold Call") // Inbound, LinkedIn, Cold Call
+
+  setterId      String?
+  setter        EmployeeProfile?  @relation("SetterAppointments", fields: [setterId], references: [id], onDelete: SetNull)
+
+  closerId      String?
+  closer        EmployeeProfile?  @relation("CloserAppointments", fields: [closerId], references: [id], onDelete: SetNull)
+
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([setterId])
+  @@index([closerId])
+  @@index([status])
+  @@map("appointments")
+}
+
+model ClosureDeal {
+  id            String     @id @default(uuid())
+  dealName      String
+  clientName    String
+  company       String
+  dealValue     Float      // Total Contract Value (e.g. $45,000)
+  cashCollected Float      @default(0) // Initial deposit or paid in full
+  stage         DealStage  @default(QUALIFIED)
+  closeDate     DateTime?
+  contractUrl   String?
+  notes         String?
+
+  closerId      String?
+  closer        EmployeeProfile? @relation("CloserDeals", fields: [closerId], references: [id], onDelete: SetNull)
+
+  setterId      String?
+  setter        EmployeeProfile? @relation("SetterDeals", fields: [setterId], references: [id], onDelete: SetNull)
+
+  project       ProjectDelivery?
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([closerId])
+  @@index([stage])
+  @@map("closure_deals")
+}
+
+model ProjectDelivery {
+  id                 String                @id @default(uuid())
+  projectName        String
+  clientName         String
+  company            String
+  status             ProjectDeliveryStatus @default(ONBOARDING)
+  health             DeliveryHealth        @default(ON_TRACK)
+  progressPercent    Int                   @default(0) // 0 - 100
+  startDate          DateTime              @default(now())
+  targetDeliveryDate DateTime
+  actualDeliveryDate DateTime?
+  milestones         String                @default("[]") // JSON string of milestone checklist
+  csatScore          Float?                // Client Satisfaction score out of 5.0
+  notes              String?
+
+  dealId             String?               @unique
+  deal               ClosureDeal?          @relation(fields: [dealId], references: [id], onDelete: SetNull)
+
+  deliveryLeadId     String?
+  deliveryLead       EmployeeProfile?      @relation("LeadProjects", fields: [deliveryLeadId], references: [id], onDelete: SetNull)
+
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+
+  @@index([deliveryLeadId])
+  @@index([status])
+  @@map("project_deliveries")
+}
+
+model EmployeeProgress {
+  id            String         @id @default(uuid())
+  employeeId    String
+  employee      EmployeeProfile @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  metricName    String         // e.g. "Appointments Booked", "Deals Closed", "Projects Delivered"
+  targetValue   Float
+  achievedValue Float
+  unit          String         @default("count") // count, USD, percent
+  period        String         @default("Monthly") // Weekly, Monthly
+  status        ProgressStatus @default(ON_TRACK)
+  notes         String?
+  updatedAt     DateTime       @updatedAt
+
+  @@index([employeeId])
+  @@map("employee_progress")
 }
