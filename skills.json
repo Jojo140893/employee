@@ -1,0 +1,278 @@
+{
+  "skills_count": 39,
+  "skills": [
+    {
+      "id": "api-and-interface-design",
+      "name": "api-and-interface-design",
+      "category": "API & Architecture",
+      "summary": "Clean frontend-backend contracts, optimistic UI updates, error boundary handling, resilience",
+      "path": "skills/api-and-interface-design/SKILL.md"
+    },
+    {
+      "id": "architecture-designer",
+      "name": "architecture-designer",
+      "category": "API & Architecture",
+      "summary": "Scalable web app architecture, modular boundaries, state machines, domain-driven frontend patterns",
+      "path": "skills/architecture-designer/SKILL.md"
+    },
+    {
+      "id": "brand-guidelines",
+      "name": "brand-guidelines",
+      "category": "UI/UX Design & Intelligence",
+      "summary": "Brand consistency, typography rules, color standards, brand identity alignment",
+      "path": "skills/brand-guidelines/SKILL.md"
+    },
+    {
+      "id": "browser-testing-with-devtools",
+      "name": "browser-testing-with-devtools",
+      "category": "Testing & DevTools",
+      "summary": "Chrome DevTools automated inspection, console error tracking, visual layout verification",
+      "path": "skills/browser-testing-with-devtools/SKILL.md"
+    },
+    {
+      "id": "canvas-design",
+      "name": "canvas-design",
+      "category": "UI/UX Design & Intelligence",
+      "summary": "High-fidelity visual layouts, canvas components, interactive visual elements",
+      "path": "skills/canvas-design/SKILL.md"
+    },
+    {
+      "id": "code-review-and-quality",
+      "name": "code-review-and-quality",
+      "category": "Testing & DevTools",
+      "summary": "Automated code quality heuristics, architectural review, maintainability standards",
+      "path": "skills/code-review-and-quality/SKILL.md"
+    },
+    {
+      "id": "composition-patterns",
+      "name": "composition-patterns",
+      "category": "Design Systems & Component Styling",
+      "summary": "React composition patterns that scale: compound components, render props, slot architecture",
+      "path": "skills/composition-patterns/SKILL.md"
+    },
+    {
+      "id": "debugging-wizard",
+      "name": "debugging-wizard",
+      "category": "API & Architecture",
+      "summary": "Root cause analysis for frontend bugs, hydration mismatches, memory leaks, event loop latency",
+      "path": "skills/debugging-wizard/SKILL.md"
+    },
+    {
+      "id": "design-system",
+      "name": "design-system",
+      "category": "Design Systems & Component Styling",
+      "summary": "Design token generation, component spec sheets, token exports for web applications",
+      "path": "skills/design-system/SKILL.md"
+    },
+    {
+      "id": "design-system-tailwind",
+      "name": "design-system-tailwind",
+      "category": "Design Systems & Component Styling",
+      "summary": "Tailwind CSS tokens, variant management with class-variance-authority, consistent spacing & color scales",
+      "path": "skills/design-system-tailwind/SKILL.md"
+    },
+    {
+      "id": "design-taste-frontend",
+      "name": "design-taste-frontend",
+      "category": "UI/UX Design & Intelligence",
+      "summary": "Anti-slop frontend craftsmanship at the level of Figma and x.ai: balanced whitespace, real photography, quiet micro-interactions",
+      "path": "skills/design-taste-frontend/SKILL.md"
+    },
+    {
+      "id": "fast-animation-motion-graphics",
+      "name": "fast-animation-motion-graphics",
+      "category": "Motion, Animation & Micro-Interactions",
+      "summary": "Kinetic typography, spring-damped micro-interactions, whip transitions, and responsive feedback",
+      "path": "skills/fast-animation-motion-graphics/SKILL.md"
+    },
+    {
+      "id": "frontend-design",
+      "name": "frontend-design",
+      "category": "UI/UX Design & Intelligence",
+      "summary": "Distinct aesthetic direction, deliberate typography, cohesive colors, anti-cookie-cutter frontend styling",
+      "path": "skills/frontend-design/SKILL.md"
+    },
+    {
+      "id": "frontend-developer",
+      "name": "frontend-developer",
+      "category": "Frontend Engineering & Frameworks",
+      "summary": "React 19, Next.js 15, responsive layouts, client-side state management, and modern frontend architecture",
+      "path": "skills/frontend-developer/SKILL.md"
+    },
+    {
+      "id": "frontend-ui-engineering",
+      "name": "frontend-ui-engineering",
+      "category": "Frontend Engineering & Frameworks",
+      "summary": "Addy Osmani's engineering guide: component architecture, design systems, state, responsive UI, WCAG 2.1 AA",
+      "path": "skills/frontend-ui-engineering/SKILL.md"
+    },
+    {
+      "id": "javascript-pro",
+      "name": "javascript-pro",
+      "category": "Frontend Engineering & Frameworks",
+      "summary": "Modern ES2024+, async performance, immutability, clean patterns for high-performance web apps",
+      "path": "skills/javascript-pro/SKILL.md"
+    },
+    {
+      "id": "lottie-motion-design",
+      "name": "lottie-motion-design",
+      "category": "Motion, Animation & Micro-Interactions",
+      "summary": "Animation timing, easing, choreography, and Disney animation principles adapted for UI",
+      "path": "skills/lottie-motion-design/SKILL.md"
+    },
+    {
+      "id": "motion-design-toolkit",
+      "name": "motion-design-toolkit",
+      "category": "Motion, Animation & Micro-Interactions",
+      "summary": "GSAP, Framer Motion (motion/react), Lottie, scroll effects, smooth responsive micro-interactions",
+      "path": "skills/motion-design-toolkit/SKILL.md"
+    },
+    {
+      "id": "nextjs-developer",
+      "name": "nextjs-developer",
+      "category": "Frontend Engineering & Frameworks",
+      "summary": "Next.js App Router, caching strategies, server actions, metadata, routing patterns",
+      "path": "skills/nextjs-developer/SKILL.md"
+    },
+    {
+      "id": "performance-optimization",
+      "name": "performance-optimization",
+      "category": "Performance & Optimization",
+      "summary": "Performance budgets, critical rendering path, resource prioritization, runtime profiling",
+      "path": "skills/performance-optimization/SKILL.md"
+    },
+    {
+      "id": "playwright-expert",
+      "name": "playwright-expert",
+      "category": "Testing & DevTools",
+      "summary": "Playwright end-to-end testing, cross-browser verification, responsive viewport testing",
+      "path": "skills/playwright-expert/SKILL.md"
+    },
+    {
+      "id": "react-component-performance",
+      "name": "react-component-performance",
+      "category": "Performance & Optimization",
+      "summary": "Diagnose slow React components, profiling, memoization strategies, list virtualization",
+      "path": "skills/react-component-performance/SKILL.md"
+    },
+    {
+      "id": "react-expert",
+      "name": "react-expert",
+      "category": "Frontend Engineering & Frameworks",
+      "summary": "React 19 Server Components, Suspense, hooks, state patterns, and clean component APIs",
+      "path": "skills/react-expert/SKILL.md"
+    },
+    {
+      "id": "react-view-transitions",
+      "name": "react-view-transitions",
+      "category": "Motion, Animation & Micro-Interactions",
+      "summary": "Native View Transitions API for fluid multi-page navigation and smooth element morphing",
+      "path": "skills/react-view-transitions/SKILL.md"
+    },
+    {
+      "id": "test-master",
+      "name": "test-master",
+      "category": "Testing & DevTools",
+      "summary": "Test architecture, test-driven development, automated regression suites, mocking strategies",
+      "path": "skills/test-master/SKILL.md"
+    },
+    {
+      "id": "theme-factory",
+      "name": "theme-factory",
+      "category": "UI/UX Design & Intelligence",
+      "summary": "Color palette generation, dark/light mode token architecture, brand aesthetics",
+      "path": "skills/theme-factory/SKILL.md"
+    },
+    {
+      "id": "threejs-react-three-fiber",
+      "name": "threejs-react-three-fiber",
+      "category": "Motion, Animation & Micro-Interactions",
+      "summary": "Declarative 3D scenes in React with React Three Fiber and Drei: lighting, shaders, interactive 3D",
+      "path": "skills/threejs-react-three-fiber/SKILL.md"
+    },
+    {
+      "id": "typescript-pro",
+      "name": "typescript-pro",
+      "category": "Frontend Engineering & Frameworks",
+      "summary": "Production-grade TypeScript, strict type safety, generic utilities, component prop contracts",
+      "path": "skills/typescript-pro/SKILL.md"
+    },
+    {
+      "id": "ui-styling",
+      "name": "ui-styling",
+      "category": "Design Systems & Component Styling",
+      "summary": "Modern CSS, Tailwind patterns, layout grids, responsive design tokens and component states",
+      "path": "skills/ui-styling/SKILL.md"
+    },
+    {
+      "id": "ui-ux-pro-max",
+      "name": "ui-ux-pro-max",
+      "category": "UI/UX Design & Intelligence",
+      "summary": "80 searchable styles, 192 product palettes, 120 UX guidelines, reasoning engine & search CLI",
+      "path": "skills/ui-ux-pro-max/SKILL.md"
+    },
+    {
+      "id": "unslop",
+      "name": "unslop",
+      "category": "UI/UX Design & Intelligence",
+      "summary": "Removes AI-tells (purple gradients, generic cards, robotic emojis) and gives products distinctive character",
+      "path": "skills/unslop/SKILL.md"
+    },
+    {
+      "id": "vercel-optimize",
+      "name": "vercel-optimize",
+      "category": "Performance & Optimization",
+      "summary": "Serverless latency reduction, caching tiers, compute optimization, bill and resource efficiency",
+      "path": "skills/vercel-optimize/SKILL.md"
+    },
+    {
+      "id": "vercel-react-best-practices",
+      "name": "vercel-react-best-practices",
+      "category": "Performance & Optimization",
+      "summary": "62 rules across 8 categories: waterfall elimination, bundle optimization, server/client boundary, re-render avoidance",
+      "path": "skills/vercel-react-best-practices/SKILL.md"
+    },
+    {
+      "id": "visual-design-language",
+      "name": "visual-design-language",
+      "category": "UI/UX Design & Intelligence",
+      "summary": "Modern visual hierarchy, glassmorphism, depth, typography, compact enterprise UI density",
+      "path": "skills/visual-design-language/SKILL.md"
+    },
+    {
+      "id": "web-artifacts-builder",
+      "name": "web-artifacts-builder",
+      "category": "Design Systems & Component Styling",
+      "summary": "Reusable web components, interactive UI widgets, clean isolated frontend components",
+      "path": "skills/web-artifacts-builder/SKILL.md"
+    },
+    {
+      "id": "web-design-guidelines",
+      "name": "web-design-guidelines",
+      "category": "Accessibility & Guidelines",
+      "summary": "WCAG 2.2 AA compliance, accessible contrast, keyboard navigation, focus management, screen reader labels",
+      "path": "skills/web-design-guidelines/SKILL.md"
+    },
+    {
+      "id": "web-performance-optimization",
+      "name": "web-performance-optimization",
+      "category": "Performance & Optimization",
+      "summary": "Core Web Vitals (LCP, INP, CLS), asset loading, bundle size reduction, responsive caching",
+      "path": "skills/web-performance-optimization/SKILL.md"
+    },
+    {
+      "id": "webapp-testing",
+      "name": "webapp-testing",
+      "category": "Testing & DevTools",
+      "summary": "Full web application testing strategies: unit, component, integration, and user interaction flows",
+      "path": "skills/webapp-testing/SKILL.md"
+    },
+    {
+      "id": "writing-guidelines",
+      "name": "writing-guidelines",
+      "category": "Accessibility & Guidelines",
+      "summary": "Human-friendly UI copy, intuitive empty states, constructive error messages, clear user guidance",
+      "path": "skills/writing-guidelines/SKILL.md"
+    }
+  ]
+}
